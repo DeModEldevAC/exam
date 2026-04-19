@@ -1,0 +1,371 @@
+
+import 'package:fire/login.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  //printing
+  QuerySnapshot snapshot = await FirebaseFirestore.instance
+      .collection("users")
+      .get();
+  for (var doc in snapshot.docs) {
+    print(doc.data().toString());
+  }
+
+  //create new user
+  Map<String, dynamic> newUserData = {
+    "firstName": "Tina",
+    "lastName": "D'mello",
+  };
+  //Inserting
+  await FirebaseFirestore.instance.collection("users").add(newUserData);
+  print("New user inserted/saved");
+
+  //retrieving data from firestore on console
+  QuerySnapshot snapshot1 = await FirebaseFirestore.instance
+      .collection("users")
+      .get();
+  for (var doc in snapshot1.docs) {
+    print(doc.data().toString());
+  }
+
+  //updating document in collection
+  // await FirebaseFirestore.instance
+  //     .collection("users")
+  //     .doc("NhaPVE4RcPsSdHYRfWXT")
+  //     .update({"lastName": "newupdated"});
+  // print("user lastName updated");
+  // QuerySnapshot snapshot2 = await FirebaseFirestore.instance
+  //     .collection("users")
+  //     .get();
+  // for (var doc in snapshot2.docs) {
+  //   print(doc.data().toString());
+  // }
+
+  //deleting document
+  // await FirebaseFirestore.instance
+  //     .collection("users")
+  //     .doc("x49BUtv09jgFtPlTBcu6")
+  //     .delete();
+  // print("document deleted");
+  // QuerySnapshot snapshot3 = await FirebaseFirestore.instance
+  //     .collection("users")
+  //     .get();
+  // for (var doc in snapshot3.docs) {
+  //   print(doc.data().toString());
+  // }
+
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
+      home: const Login(),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'homepage.dart';
+import 'signup.dart';
+
+class Login extends StatefulWidget {
+  const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
+  void login_func() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    if (email == "" || password == "") {
+      print("Fill all details");
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Homepage()),
+      );
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Login")),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Email",
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: passwordController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Password",
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(onPressed: login_func, child: const Text("Login")),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Signup()),
+                );
+              },
+              child: const Text("Create Account"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+class Signup extends StatefulWidget {
+  const Signup({super.key});
+
+  @override
+  State<Signup> createState() => _SignupState();
+}
+
+class _SignupState extends State<Signup> {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController cPasswordController = TextEditingController();
+
+  void createAccount() async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+    String cpassword = cPasswordController.text.trim();
+
+    if (email == "" || password == "" || cpassword == "") {
+      print("Fill all details");
+      return;
+    }
+
+    if (password != cpassword) {
+      print("Passwords do not match");
+      return;
+    }
+
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      print("User created");
+
+      Navigator.pop(context);
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Signup")),
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Email",
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: passwordController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Password",
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: cPasswordController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: "Confirm Password",
+              ),
+              obscureText: true,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: createAccount,
+              child: const Text("Create Account"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
+
+  @override
+  State<Homepage> createState() => _HomepageState();
+}
+
+class _HomepageState extends State<Homepage> {
+  TextEditingController firstNameController = TextEditingController();
+  TextEditingController lastNameController = TextEditingController();
+
+  void insert_func() async {
+    String firstName = firstNameController.text.trim();
+    String lastName = lastNameController.text.trim();
+
+    if (firstName == "" || lastName == "") {
+      print("Fill all details");
+      return;
+    }
+
+    await FirebaseFirestore.instance.collection("users").add({
+      "firstName": firstName,
+      "lastName": lastName,
+    });
+
+    firstNameController.clear();
+    lastNameController.clear();
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text("Data saved")));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.deepPurple,
+
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: const Text("Home"),
+      ),
+
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          children: [
+            TextField(
+              controller: firstNameController,
+              decoration: const InputDecoration(
+                filled: true,
+                hintText: "First Name",
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            TextField(
+              controller: lastNameController,
+              decoration: const InputDecoration(
+                filled: true,
+                hintText: "Last Name",
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            ElevatedButton(onPressed: insert_func, child: const Text("Save")),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
