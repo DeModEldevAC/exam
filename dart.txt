@@ -1,0 +1,139 @@
+import 'dart:async';
+import 'dart:io';
+
+// class Student {
+//   String _name;
+//   int _marks;
+
+//   Student(this._marks, this._name);
+
+//   int get marks => _marks;
+//   set marks(int mks) => mks > 0 && mks < 100 ? _marks = mks : print("Error");
+
+//   void det() {
+//     print("$_name and $_marks");
+//   }
+// }
+
+abstract class Vehicle {
+  String model;
+  String color;
+  Vehicle(this.model, this.color);
+  void dp() {
+    print("model:$model n color:$color");
+  }
+
+  void dp1();
+}
+
+class Car extends Vehicle {
+  String brand;
+  Car(String model, String color, this.brand) : super(model, color);
+
+  @override
+  void dp1() {
+    super.dp();
+    print("cars on");
+  }
+}
+
+void main() async {
+  // print("Enter number 1:");
+  // int n = int.parse(stdin.readLineSync()!);
+  // print("Enter number 2:");
+  // int n2 = int.parse(stdin.readLineSync()!);
+  // print(n + n2);
+
+  // List<dynamic> nums = [1, 2, 3, 4, 5, 6];
+  // print(nums);
+  // nums.add(10);
+  // print(nums);
+
+  // Map<String, dynamic> details = {
+  //   "names": "jayd",
+  //   "age": 20,
+  //   "email": "j@gmail.com",
+  // };
+  // Map<String, dynamic> detail1 = {"car": false, "gym": true};
+  // print(details);
+  // details['age'] = 88;
+  // print(details);
+  // details.forEach((e, s) => print("1:$e and 2:${s}"));
+  // print(details.keys.toList());
+
+  // details.addAll(detail1);
+  // print(details);
+
+  // Student s1 = Student(20, "jay");
+
+  // print("initials");
+  // s1.det();
+  // s1.marks = 90;
+  // print("after");
+  // s1.det();
+
+
+  // Stream<int> counstream(int max) async* {
+  //   for (var i = 0; i < max; i++) {
+  //     await Future.delayed(Duration(seconds: 2));
+  //     yield i;
+  //   }
+  // }
+  // final str = counstream(10);
+  // str.listen(
+  //   (onData) => print(onData),
+  //   onDone: () => print("done"),
+  //   onError: (e) => print("errror $e"),
+  // );
+  // final controllerstream = StreamController.broadcast();
+  // final st1 = controllerstream.stream;
+  // st1.listen(
+  //   (onData) => print(onData),
+  //   onDone: () => print("done"),
+  //   onError: (e) => print(e),
+  // );
+  // st1.listen(
+  //   (onData) => print(onData),
+  //   onDone: () => print("done2"),
+  //   onError: (e) => print(e),
+  // );
+  // for (var i = 0; i < 4; i++) {
+  //   await Future.delayed(Duration(seconds: 1));
+  //   controllerstream.sink.add(i);
+  // }
+  // await controllerstream.close();
+
+
+
+  // Stream<int> Counttream = Stream.fromIterable([
+  //   1,
+  //   3,
+  //   4,
+  //   5,
+  //   5,
+  //   6,
+  //   7,
+  //   8,
+  //   9,
+  //   10,
+  //   11,
+  //   12,
+  // ]);
+
+  // Stream<String> newStr = Counttream.where(
+  //   (e) => e % 2 == 0,
+  // ).map((e) => e * 2).take(4).map((e) => " nn $e");
+
+  // await for (var element in newStr) {
+  //   print(element);
+  // }
+
+  // List<Vehicle> ve = [
+  //   Car("sedan", "grey", "honda"),
+  //   Car("hatch", "blue", "suz"),
+  // ];
+  // for (var element in ve) {
+  //   element.dp1();
+  //   print("---" * 10);
+  // }
+}
