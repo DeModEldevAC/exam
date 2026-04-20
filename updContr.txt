@@ -1,0 +1,283 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/Homepage.dart';
+import 'package:get/get.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(home: Homepage());
+  }
+}
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'moneyController.dart';
+import 'Addpage.dart';
+
+class Homepage extends StatelessWidget {
+  Homepage({super.key});
+
+  final MoneyController controller = Get.put(MoneyController());
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Money Manager"), centerTitle: true),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.to(Addpage());
+        },
+        child: Icon(Icons.add),
+      ),
+
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // Available Balance
+            Container(
+              height: 100,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Center(
+                child: Obx(
+                  () => Text(
+                    "Balance ₹${controller.availableBalance.value}",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+            ),
+
+            SizedBox(height: 15),
+
+            Row(
+              children: [
+                // Income
+                Expanded(
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: Obx(
+                        () => Text(
+                          "Income ₹${controller.incomeBalance.value}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                SizedBox(width: 10),
+
+                // Expense
+                Expanded(
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: Obx(
+                        () => Text(
+                          "Expense ₹${controller.expenseBalance.value}",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 10),
+            Expanded(
+              child: Obx(
+                () => ListView.builder(
+                  itemCount: controller.transactions.length,
+                  itemBuilder: (context, index) {
+                    var t = controller.transactions[index];
+
+                    return t.type == "Expense"
+                        ? Text(
+                            "Expense is ${t.type} - ₹${t.amount}",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        : Text(
+                            "Income is ${t.type} - ₹${t.amount}",
+                            style: TextStyle(color: Colors.green),
+                          );
+                  },
+                ),
+              ),
+            ),
+
+            Container(
+              height: 200,
+              width: 200,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.asset("images/s.webp"),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'moneyController.dart';
+
+class Addpage extends StatelessWidget {
+  Addpage({super.key});
+
+  final MoneyController controller = Get.find();
+
+  // default
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Add Transaction")),
+
+      body: Padding(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // Amount input
+            TextField(
+              controller: controller.amountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                hintText: "Enter Amount",
+                border: OutlineInputBorder(),
+              ),
+            ),
+
+            SizedBox(height: 20),
+
+            // Dropdown
+            DropdownButton<String>(
+              value: controller.type,
+              items: [
+                DropdownMenuItem(value: "Income", child: Text("Income")),
+                DropdownMenuItem(value: "Expense", child: Text("Expense")),
+              ],
+              onChanged: (value) {
+                controller.type = value!;
+              },
+            ),
+
+            SizedBox(height: 20),
+
+            ElevatedButton(
+              onPressed: () {
+                int? a = int.tryParse(controller.amountController.text);
+                int amount = a != null ? a : 0;
+                controller.addTransaction(amount, controller.type);
+
+                Get.back();
+              },
+              child: Text("Add"),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+import 'package:flutter/material.dart';
+import 'package:flutter_application_1/transactionModel.dart';
+import 'package:get/get.dart';
+
+class MoneyController extends GetxController {
+  RxInt availableBalance = 0.obs;
+  RxInt incomeBalance = 0.obs;
+  RxInt expenseBalance = 0.obs;
+  String type = "Expense";
+  TextEditingController amountController = TextEditingController();
+  RxList<TransactionModel> transactions = <TransactionModel>[].obs;
+
+  void addTransaction(int amount, String type) {
+    transactions.add(TransactionModel(title: type, amount: amount, type: type));
+
+    if (type == "Expense") {
+      expenseBalance.value += amount;
+      availableBalance.value -= amount;
+    } else {
+      incomeBalance.value += amount;
+      availableBalance.value += amount;
+    }
+  }
+}
+
+
+
+
+
+
+
+
+
+
+class TransactionModel {
+  String title;
+  int amount;
+  String type; // "Income" or "Expense"
+
+  TransactionModel({
+    required this.title,
+    required this.amount,
+    required this.type,
+  });
+}
+
+
+
+
+
