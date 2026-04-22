@@ -1,0 +1,256 @@
+
+nmap ip
+Sn -p [ports,]  [ip]   gives port number 
+-sv gives services available info
+-O os
+
+
+
+4.Implementation of MITM attack using Wireshark 
+Steps:
+Change adapter to bridge and Promiscuous mode :allow all  in VM setting
+Keep Wireshark on in kali
+Go in windows>browser>vulneb>signup(put name,pass)>login
+Open kali> wireshark in terminal >right click on eth0 >[windows login]>stop wire shark in kali>search http in wireshark> click html form url > uname,password shows 
+
+
+
+
+5.Implementation of MITM attack using bettercap
+Steps:
+sudo  apt install -y  bettercap (Install better cap)
+sudo bettercap
+net.probe on			(start to scan network)
+events.stream off                   (stop the networks getting stuff)
+set net.sniff verbose true        (gets more detailed output)
+net.sniff on                              (MIM attack start)
+
+Go to browser in windows to vulnweb
+Login
+
+Then in kali >to stop
+net.stiff off
+events.stream off
+Ctrl+shift+f  >search Test
+
+
+
+
+
+theHarvester -d example.com -l 100 -b all
+
+
+
+14. Implementation of vulnerability assessment using nikto
+sudo systemctl enable docker --now
+sudo docker pull vulnerables/web-dvwa
+Then in browser type  http://localhost:8080 
+On the login page:
+Username: admin
+Password: password
+
+
+
+sudo docker run --rm -p 3000:3000 bkimminich/juice-shop
+
+
+
+
+
+
+
+
+
+
+
+Task 2
+Admin login
+Steps:
+>logout>’ OR 1=1’>password>login
+
+
+
+Task 3
+Error handling
+'
+
+
+Task 5
+Privacy policy 
+Steps:
+Go in account and then go in privacy and security and then privacy policies, you’ll get to something like this:
+
+
+
+
+Task 6
+Write a bad feedback(0 rating)
+Steps:
+Go to customer feedback >Fill bad comment and set star to 2(dont submit yet)
+Do inspect>network>then click submit on form >click api/Feedback>
+Headers >resend>set rating to 0 and resend
+
+
+
+
+
+8.Identification of web vulnerabilities using OWASP project (7-14)
+
+Task 7
+Confidential document
+Steps:
+Search>http://localhost:3000/ftp/acquisitions.md
+
+
+
+
+Task 8
+Cross site/dom accesses
+Steps:
+Type <iframe src=”javascript:alert(‘xss’)”> in the search bar
+
+
+
+
+Task 9:
+Admin Section
+Steps:
+Search bar>3000/#/administration
+
+
+Task 10
+Five star feedback
+Steps:
+Login as admin
+remove 5 star feedback.
+
+
+Task 11
+Exposed metrics
+Steps:
+In url bar http://localhost:3000/metrics
+
+
+
+Task 12
+ Sandbox
+web3-sandox
+
+
+Task 13
+Empty registration form 
+Steps:Click on:
+account>Logout>account>login>scroll down>not a customer>inspect>fill the columns>network>go in headers>resend>scroll down and remove: email, password, repeat password, and answer of security question.
+
+
+
+
+9.Identification of web vulnerabilities using OWASP project (14-24)
+Task 14
+Outdated allow list
+Steps:
+Go to Homepage>inspect>debugger>Find file  main.js>Copy the redirect url 
+Paste after 3000/
+Remove ./
+Bitcoin page opens
+
+
+
+
+
+
+
+Task 15
+
+Missing encoding
+Steps:
+Login as admin > go to photowall > inspect>ctrl+f > find ‘whoneedsfourlegs’>
+browser>Got to url decoder>%23 instead of #
+Change in image src tag
+
+
+
+
+
+
+
+
+
+
+Repetitive registration 
+Steps:
+Open sign up page > not yet a customer > put any email > put password abcde > confirm password  abcde > then go back to password and type abcde1 -> fill the remaining fields and sign up
+
+
+
+
+
+Task 18
+Forged feedback
+Steps
+Create 2 accounts
+Login from 1
+Rate the juice
+inspect>network tap> click put> resend>body change to 2nd email>send      
+
+
+
+
+
+Task 19: Login mc safe search
+Steps:
+Watch that video he says fav. Pet name
+admin@juice-sh.op      
+mc.safesearch@juice-sh.op
+password :  Mr. N00dles                             
+
+
+
+
+
+Task 20
+bjeorn s fav pet
+Steps
+Go search> lego>ratings>bjoern@owasp.org>login page>wereGonnacrackpassword
+browser>search kimminich   >2018 video @ 4mins    >
+Go back to the login→forget password
+Add zaya as security question
+Put a password of your choice 
+
+
+
+
+Task 21
+
+Forgotten developer backup/poison null byte
+Steps:
+Search>http://localhost:3000/ftp/package.json.bak%00.md>first it gives error
+>newtab  open url encode decoder   
+>%00>eecode> becomes %2500  
+>modify the url>it downloads    
+
+   
+Task 22
+Forgotten sales backup
+Steps:
+go to >http://localhost:3000/ftp/coupons_2013.md.bak%2500.md  >something downloads
+
+
+
+
+Manipulate basket
+Steps:
+Login with any previous accnt >
+ inspect > network>click post basketitems/api > go to headers > resend > modify body > send
+
+
+
+
+
+
+
+
+
+
+
+
